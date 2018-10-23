@@ -15,22 +15,21 @@ Blast = nblast_allbyall(N_all_dps,normalisation = 'mean')           # Pairwise n
 Dend = as.dendrogram(nhclust(scoremat=Blast))                       # Cluster and Dendrogram
 
 # function to apply to nodes
-leaf_col<-function(n) {
-  if(is.leaf(n)) {
-    if(labels(n) %in% S_1) {
-      attr(n, 'edgePar')$col = 'red'
-    } else {
-      attr(n, 'edgePar')$col = 'blue'
+leaf_col<-function(n) {                                             # Function to be applied to all Nodes
+  if(is.leaf(n)) {                                                  # If node is a leaf...
+    if(labels(n) %in% S_1) {                                        # If the label of the node is from first sample
+      attr(n, 'edgePar')$col = 'red'                                # Set the edge colour attribute to red
+    } else {  
+      attr(n, 'edgePar')$col = 'blue'                               # if not, then Blue
     }
   }
   return(n)
 }
 
-# dendrapply applies a function to each node in a dendrogram
+# dendrapply applies above function to each node in a dendrogram
 dL = dendrapply(Dend, leaf_col)
 
 # plot
-
 plot(dL, 
      main = "DA2 Upstream",
      ylim = c(0,20))
@@ -40,10 +39,10 @@ legend("topright", c("Sample 1","Sample 2"), fill=c("red","blue"), horiz=TRUE, c
 # Alternative method
 
 # get true/false list 
-Bool = labels(Dend)%in%S_1
+Bool = labels(Dend)%in%S_1                                          # True is first sample, False otherwise
 # convert list to colours
 colour = c()
-for (i in Bool) {
+for (i in Bool) {                                                   # convert True/False to Red/Blue list of strings
   if(i) {
     colour = c(colour, 'red')
   } else {
@@ -51,9 +50,9 @@ for (i in Bool) {
   }
 }
 #names(colours) = labels(Dend)
-colour = structure(colour, .Names = labels(Dend))
-# use set_leaf_colours
-dL2 = set_leaf_colours(Dend,colour,"edge")
+colour = structure(colour, .Names = labels(Dend))                   # Convert to named character vector - each string value 
+# use set_leaf_colours                                              # has a name (skid) attached to it
+dL2 = set_leaf_colours(Dend,colour,"edge")                          # Apply Gregs function
 # plot
 plot(dL2,
      main = "DA2 Upstream",
