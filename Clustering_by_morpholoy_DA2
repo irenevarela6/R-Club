@@ -1,0 +1,20 @@
+
+DA2downstreamnew = catmaid_skids('annotation:FML - downstream of first DA2')
+DA2dowstream = read.neurons.catmaid('annotation:FML - downstream of DA2')
+
+# convert to microns and resample to 1µm segments
+DA2downstream.dps = dotprops(DA2downstream/1e3, resample=1, k=5)
+DA2downstream.aba = nblast_allbyall(DA2downstream.dps, UseAlpha = T)
+DA2downstream.hclust = nhclust(scoremat = DA2downstream.aba)
+plot(DA2downstream.hclust)
+plot(DA2 downstream.hclust, labels = DA2 downstream[,'name'] )
+
+#Functions used:
+#dotprops: neurons as point clouds with tangent vectors (but no connectivity)
+#nblast_allbyall: Calls nblast to compute the actual scores. Can accept either a neuronlist or neuron names as a character vector. This is a thin wrapper around nblast and its main advantage is the option of "mean" normalisation for forward and reverse scores, which is the most sensible input to give to a clustering algorithm as well as the choice of returning a distance matrix.
+#nhclust: Given an nblast all by all score matrix (which may be specified by a package default) and/or a vector of neuron identifiers use hclust to carry out a hierarchical clustering. The default value of the distfun argument will handle square distance matrices and R dist objects.
+#*scoremat = the matrix you want to use 
+
+# Plot de dendrogram with colours: 
+DA2downstream.hclust.d=colour_clusters(DA2downstream.hclust, k = 7, groupLabels = as.integer)
+plot(DA2downstream.hclust.d)
